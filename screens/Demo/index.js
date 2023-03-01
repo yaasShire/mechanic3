@@ -1,48 +1,38 @@
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import Animated, {
-    useAnimatedGestureHandler,
-    useAnimatedStyle,
-    useSharedValue,
-    withSpring,
-} from 'react-native-reanimated';
-
-import {
-    GestureHandlerRootView,
-    PanGestureHandler,
-    PanGestureHandlerGestureEvent,
-} from 'react-native-gesture-handler';
-
-const SIZE = 90;
-const CIRCLE_RADIUS = SIZE * 2;
-
-
-
-
-function Demo() {
-    const translateX = useSharedValue(0);
-    const translateY = useSharedValue(0);
-    const panEvent = useAnimatedGestureHandler({
-        onStart: (event, context) => {
-            context.translateX = translateX.value
-            context.translateY = translateY.value
+import * as React from 'react';
+import { Avatar, Button, Card, Text } from 'react-native-paper';
+import { View, StyleSheet, FlatList } from 'react-native';
+import { style } from 'deprecated-react-native-prop-types/DeprecatedViewPropTypes';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useAnimatedStyle, useSharedValue, useAnimatedGestureHandler } from 'react-native-reanimated';
+import { PanGestureHandler, GestureHandlerRootView } from 'react-native-gesture-handler';
+import Animated from 'react-native-reanimated';
+const LeftContent = props => <Avatar.Icon {...props} icon="folder" />
+const DATA = [
+    { id: 1, text: 'Card #1', uri: 'http://imgs.abduzeedo.com/files/paul0v2/unsplash/unsplash-04.jpg' },
+    { id: 2, text: 'Card #2', uri: 'http://www.fluxdigital.co/wp-content/uploads/2015/04/Unsplash.jpg' },
+    { id: 3, text: 'Card #3', uri: 'http://imgs.abduzeedo.com/files/paul0v2/unsplash/unsplash-09.jpg' },
+    { id: 4, text: 'Card #4', uri: 'http://imgs.abduzeedo.com/files/paul0v2/unsplash/unsplash-01.jpg' },
+    { id: 5, text: 'Card #5', uri: 'http://imgs.abduzeedo.com/files/paul0v2/unsplash/unsplash-04.jpg' },
+    { id: 6, text: 'Card #6', uri: 'http://www.fluxdigital.co/wp-content/uploads/2015/04/Unsplash.jpg' },
+    { id: 7, text: 'Card #7', uri: 'http://imgs.abduzeedo.com/files/paul0v2/unsplash/unsplash-09.jpg' },
+    { id: 8, text: 'Card #8', uri: 'http://imgs.abduzeedo.com/files/paul0v2/unsplash/unsplash-01.jpg' },
+];
+const Demo = () => {
+    const translateX = useSharedValue(0)
+    const translateY = useSharedValue(0)
+    const panGestureEvent = useAnimatedGestureHandler({
+        onStart: (event) => {
+            translateX.value = event.translationX
+            translateY.value = event.translationY
         },
-        onActive: (event, context) => {
-            translateX.value = event.translationX + context.translateX
-            translateY.value = event.translationY + context.translateY
+        onActive: (event) => {
+            translateX.value = event.translationX
+            translateY.value = event.translationY
+            console.log(event)
         },
-        onEnd: (event, context) => {
-            const distance = Math.sqrt(translateX.value ** 2 + translateY.value ** 2)
-            if (distance < CIRCLE_RADIUS + SIZE / 2) {
-                translateX.value = 0,
-                    translateY.value = 0
-
-            }
-        }
+        onEnd: (event) => { }
     })
-
-    const rStyle = useAnimatedStyle(() => {
+    const animatedStyle = useAnimatedStyle(() => {
         return {
             transform: [
                 {
@@ -54,47 +44,57 @@ function Demo() {
             ]
         }
     })
-
-
     return (
-        <View style={styles.container}>
-            <View style={styles.circle}>
-                <PanGestureHandler onGestureEvent={panEvent} >
-                    <Animated.View style={[styles.square, rStyle]} />
-                </PanGestureHandler>
-            </View>
-        </View>
-    );
-}
+        <SafeAreaView style={styles.container}>
+            <FlatList
+                showsVerticalScrollIndicator={false}
+                style={{ flex: 1, backgroundColor: 'green' }}
+                data={DATA}
+                renderItem={({ item, index }) => {
+                    // <View>
+                    if (index == 0) {
+                        return (
+                            <PanGestureHandler onGestureEvent={panGestureEvent} >
+                                <Animated.View style={[animatedStyle]}>
+                                    <Card style={[styles.cardHolder]}>
+                                        <Card.Title title="Card Title" subtitle="Card Subtitle" left={LeftContent} />
+                                        <Card.Content>
+                                            <Text variant="titleLarge">Card title</Text>
+                                            <Text variant="bodyMedium">Card content</Text>
+                                        </Card.Content>
+                                        <Card.Cover source={{ uri: 'https://picsum.photos/700' }} />
+                                        <Card.Actions>
+                                            <Button>Cancel</Button>
+                                            <Button>Ok</Button>
+                                        </Card.Actions>
+                                    </Card>
+                                </Animated.View>
+                            </PanGestureHandler>
+
+                        )
+                    }
+                    // </View>
+                }}
+            />
+        </SafeAreaView>
+    )
+};
 
 export default () => {
     return (
         <GestureHandlerRootView style={{ flex: 1 }}>
             <Demo />
         </GestureHandlerRootView>
-    );
-};
-
+    )
+}
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#fff',
-        alignItems: 'center',
-        justifyContent: 'center',
+        // justifyContent: 'center',
+        alignItems: 'center'
     },
-    square: {
-        width: SIZE,
-        height: SIZE,
-        backgroundColor: 'rgba(0, 0, 256, 0.5)',
-        borderRadius: 20,
-    },
-    circle: {
-        width: CIRCLE_RADIUS * 2,
-        height: CIRCLE_RADIUS * 2,
-        alignItems: 'center',
-        justifyContent: 'center',
-        borderRadius: CIRCLE_RADIUS,
-        borderWidth: 5,
-        borderColor: 'rgba(0, 0, 256, 0.5)',
-    },
-});
+    cardHolder: {
+        // width: '80%'
+        marginTop: 30
+    }
+})

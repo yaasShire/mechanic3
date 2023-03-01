@@ -5,6 +5,7 @@ import { Switch, StyleSheet, Dimensions } from 'react-native'
 import { height } from 'deprecated-react-native-prop-types/DeprecatedImagePropType'
 import { interpolate, interpolateColor, useAnimatedStyle, useDerivedValue, useSharedValue } from 'react-native-reanimated'
 import Animated from 'react-native-reanimated'
+
 const Theme = () => {
     const [theme, setTheme] = useState('light')
     const COLORS = {

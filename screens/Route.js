@@ -8,10 +8,12 @@ import LeaveReview from './LeaveReview'
 import WishList from './wishList'
 import Checkout from './checkout'
 import Theme from './Demo/Theme'
+import Demo from './Demo'
+import Privacy from './privacyAndPolicy'
 const Route = () => {
     const Stack = createNativeStackNavigator()
     return (
-        <Stack.Navigator initialRouteName='theme'>
+        <Stack.Navigator initialRouteName='privacy'>
             <Stack.Screen options={{ headerShown: false }} name='products' component={ProductsHolder} />
             <Stack.Screen options={{ headerShown: false }} name='categories' component={Categories} />
             <Stack.Screen options={{ headerShown: false }} name='productDetails' component={ProductDetails} />
@@ -19,6 +21,8 @@ const Route = () => {
             <Stack.Screen options={{ headerShown: false }} name='wishList' component={WishList} />
             <Stack.Screen options={{ headerShown: false }} name='checkout' component={Checkout} />
             <Stack.Screen options={{ headerShown: false }} name='theme' component={Theme} />
+            <Stack.Screen options={{ headerShown: false }} name='demo' component={Demo} />
+            <Stack.Screen options={{ headerShown: false }} name='privacy' component={Privacy} />
         </Stack.Navigator>
     )
 }

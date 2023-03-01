@@ -18,4 +18,8 @@ export default StyleSheet.create({
         color: "#696969",
         padding: 5
     },
+    error: {
+        color: 'red',
+        marginBottom: 10
+    }
 })
